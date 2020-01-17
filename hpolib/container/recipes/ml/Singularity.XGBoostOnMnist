@@ -18,9 +18,6 @@ VERSION v0.0.1
         && pip install .[singularity,xgboost] \
         && cd /
 
-    mkdir /home/HPOlib3
-    chmod -R 777 /home/HPOlib3
-
     mkdir /var/lib/hpolib/
     chmod -R 777 /var/lib/hpolib/
 
