@@ -1,8 +1,10 @@
-""" OpenMLDataManager organizing the data for the benchmarks with data from OpenML-tasks.
+""" OpenMLDataManager organizing the data for the benchmarks with data from
+OpenML-tasks.
 
 DataManager organizing the download of the data.
-The load function of a DataManger downloads the data given an unique OpenML identifier. It splits the data in
-train, test and optional validation splits. It can be distinguished between holdout and cross-validation data sets.
+The load function of a DataManger downloads the data given an unique OpenML
+identifier. It splits the data in train, test and optional validation splits.
+It can be distinguished between holdout and cross-validation data sets.
 
 For Non-OpenML data sets please use the hpolib.util.data_manager.
 """
@@ -11,16 +13,17 @@ from typing import Tuple, Union
 
 import numpy as np
 import openml
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedShuffleSplit
 
 import hpolib
-from hpolib.util.data_manager import HoldoutDataManager, CrossvalidationDataManager
+from hpolib.util.data_manager import HoldoutDataManager, \
+    CrossvalidationDataManager
 from hpolib.util.rng_helper import get_rng
 
 
 def get_openml100_taskids():
     """
-    Return taskids for the OpenML100 datasets
+    Return task ids for the OpenML100 data ets
     See also here: https://www.openml.org/s/14
     Reference: https://arxiv.org/abs/1708.03731
     """
@@ -41,37 +44,39 @@ def get_openml100_taskids():
 
 def get_openmlcc18_taskids():
     """
-    Return taskids for the OpenML-CC18 datasets
+    Return task ids for the OpenML-CC18 data sets
     See also here: https://www.openml.org/s/99
     TODO: ADD reference
     """
     return [
-        167149, 167150, 167151, 167152, 167153, 167154, 167155, 167156, 167157, 167158, 167159,
-        167160, 167161, 167162, 167163, 167165, 167166, 167167, 167168, 167169, 167170, 167171,
-        167164, 167173, 167172, 167174, 167175, 167176, 167177, 167178, 167179, 167180, 167181,
-        167182, 126025, 167195, 167194, 167190, 167191, 167192, 167193, 167187, 167188, 126026,
-        167189, 167185, 167186, 167183, 167184, 167196, 167198, 126029, 167197, 126030, 167199,
-        126031, 167201, 167205, 189904, 167106, 167105, 189905, 189906, 189907, 189908, 189909,
-        167083, 167203, 167204, 189910, 167202, 167097,
+        167149, 167150, 167151, 167152, 167153, 167154, 167155, 167156, 167157,
+        167158, 167159, 167160, 167161, 167162, 167163, 167165, 167166, 167167,
+        167168, 167169, 167170, 167171, 167164, 167173, 167172, 167174, 167175,
+        167176, 167177, 167178, 167179, 167180, 167181, 167182, 126025, 167195,
+        167194, 167190, 167191, 167192, 167193, 167187, 167188, 126026, 167189,
+        167185, 167186, 167183, 167184, 167196, 167198, 126029, 167197, 126030,
+        167199, 126031, 167201, 167205, 189904, 167106, 167105, 189905, 189906,
+        189907, 189908, 189909, 167083, 167203, 167204, 189910, 167202, 167097,
     ]
 
 
 def _load_data(task_id):
-    """ Helperfunction to load the data from the OpenML website. """
+    """ Helper-function to load the data from the OpenML website. """
     task = openml.tasks.get_task(task_id)
 
     try:
-        task.get_train_test_split_indices(fold=0, repeat=1)  # This should throw an ValueError!
-        raise AssertionError(f'Task {task_id} has more than one repeat. This benchmark '
-                             'can only work with a single repeat.')
+        # This should throw an ValueError!
+        task.get_train_test_split_indices(fold=0, repeat=1)
+        raise AssertionError(f'Task {task_id} has more than one repeat. This '
+                             f'benchmark can only work with a single repeat.')
     except ValueError:
         pass
 
     try:
-        task.get_train_test_split_indices(fold=1, repeat=0)  # This should throw an ValueError!
-
-        raise AssertionError(f'Task {task_id} has more than one fold. This benchmark '
-                             'can only work with a single fold.')
+        # This should throw an ValueError!
+        task.get_train_test_split_indices(fold=1, repeat=0)
+        raise AssertionError(f'Task {task_id} has more than one fold. This '
+                             f'benchmark can only work with a single fold.')
     except ValueError:
         pass
 
@@ -88,7 +93,6 @@ def _load_data(task_id):
     # saved in the arff file describing the attributes/features
     dataset = task.get_dataset()
     _, _, categorical_indicator, _ = dataset.get_data(target=task.target_name)
-
     variable_types = ['categorical' if ci else 'numerical' for ci in categorical_indicator]
 
     return X_train, y_train, X_test, y_test, variable_types, dataset.name
@@ -103,7 +107,8 @@ class OpenMLHoldoutDataManager(HoldoutDataManager):
     rng : np.random.RandomState
     name : str
     variable_types : list
-        Indicating the type of each feature in the loaded data (e.g. categorical, numerical)
+        Indicating the type of each feature in the loaded data
+        (e.g. categorical, numerical)
 
     Parameters
     ----------
@@ -113,8 +118,8 @@ class OpenMLHoldoutDataManager(HoldoutDataManager):
         defines the random state
     """
 
-    def __init__(self, openml_task_id: int, rng: Union[int, np.random.RandomState, None] = None):
-
+    def __init__(self, openml_task_id: int,
+                 rng: Union[int, np.random.RandomState, None] = None):
         super(OpenMLHoldoutDataManager, self).__init__()
 
         self._save_to = hpolib.config_file.data_dir / 'OpenML'
@@ -122,13 +127,15 @@ class OpenMLHoldoutDataManager(HoldoutDataManager):
         self.rng = get_rng(rng=rng)
         self.name = None
         self.variable_types = None
+        self.stratified_split = StratifiedShuffleSplit(n_splits=2, test_size=0.33, random_state=self.rng)
 
         self.create_save_directory(self._save_to)
 
         openml.config.apikey = '610344db6388d9ba34f6db45a3cf71de'
         openml.config.set_cache_directory(str(self._save_to))
 
-    def load(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    def load(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray,
+                            np.ndarray, np.ndarray, np.ndarray]:
         """
         Loads dataset from OpenML in config_file.data_directory.
         Downloads data if necessary.
@@ -145,10 +152,9 @@ class OpenMLHoldoutDataManager(HoldoutDataManager):
 
         X_train, y_train, X_test, y_test, variable_types, name = _load_data(self.task_id)
 
-        X_train, X_valid, y_train, y_valid = train_test_split(X_train,
-                                                              y_train,
-                                                              test_size=0.33,
-                                                              random_state=self.rng)
+        train_idx, valid_idx = list(self.stratified_split.split(X_train, y_train))[0]
+        X_train, y_train, X_valid, y_valid = X_train[train_idx], y_train[train_idx], \
+            X_train[valid_idx], y_train[valid_idx]
 
         self.X_train = X_train
         self.y_train = y_train
@@ -171,7 +177,8 @@ class OpenMLCrossvalidationDataManager(CrossvalidationDataManager):
     rng : np.random.RandomState
     name : str
     variable_types : list
-        Indicating the type of each feature in the loaded data (e.g. categorical, numerical)
+        Indicating the type of each feature in the loaded data
+        (e.g. categorical, numerical)
 
     Parameters
     ----------
@@ -181,7 +188,8 @@ class OpenMLCrossvalidationDataManager(CrossvalidationDataManager):
         defines the random state
     """
 
-    def __init__(self, openml_task_id: int, rng: Union[int, np.random.RandomState, None] = None):
+    def __init__(self, openml_task_id: int,
+                 rng: Union[int, np.random.RandomState, None] = None):
         super(OpenMLCrossvalidationDataManager, self).__init__()
 
         self._save_to = hpolib.config_file.data_dir / 'OpenML'
@@ -201,7 +209,8 @@ class OpenMLCrossvalidationDataManager(CrossvalidationDataManager):
         Downloads data if necessary.
         """
 
-        X_train, y_train, X_test, y_test, variable_types, name = _load_data(self.task_id)
+        X_train, y_train, X_test, y_test, variable_types, name = \
+            _load_data(self.task_id)
 
         self.X_train = X_train
         self.y_train = y_train
