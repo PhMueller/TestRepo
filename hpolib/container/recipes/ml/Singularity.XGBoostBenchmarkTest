@@ -5,14 +5,16 @@ From: python:3.8-slim
 MAINTAINER muelleph@informatik.uni-freiburg.de
 VERSION v0.0.1
 
+%files
+    /home/philipp/Dokumente/Code/HPOlib3 /home/philipp/HPOlib3
+
 %post
     apt update -y
     apt install build-essential git -y
     pip install numpy==1.18.1 cython==0.29.14
 
     cd /home \
-        && git clone https://github.com/automl/HPOlib3.git \
-        && cd HPOlib3 \
+        && cd $SINGULARITY_ROOTFS/home/philipp/HPOlib3 \
         && pip install .[singularity,xgboost] \
         && cd /
 
@@ -20,4 +22,4 @@ VERSION v0.0.1
     chmod -R 777 /var/lib/hpolib3/
 
 %runscript
-    python -s /home/HPOlib3/hpolib/container/server_abstract_benchmark.py ml.xgboost_benchmark $@
+    python -m hpolib.container.server_abstract_benchmark ml.xgboost_benchmark $@

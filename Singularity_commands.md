@@ -1,3 +1,11 @@
+## Install
+- Navigate into folder HPOlib3
+- for normal xgboost local: ```pip install .[xgboost]```
+- for xgboost and container: ```pip install .[xgboost,singularity] ```
+- Use singularity on Cluster:
+  Only Kisbat3 and \
+  ```export PATH=/usr/local/kislurm/singularity-3.5/bin/:$PATH```
+
 ## Container Tips und Befehle
 
 ### 1) Erzeugen von Images:
@@ -37,17 +45,47 @@ Stoppen:\
 - link in instance: \
 ```/home/philipp/Dokumente/Images/xgboost/home/miniconda/lib/python3.7/site-packages/hpolib```
 
-Ablauf:
--------
-- Container erstellen. Daten müssen vorhanden sein!
-- Container müssen auf Singularity hochgeladen sein, sonst einstellung use_instance! --> umständlich und nicht erläutert
-- Checken ob Container schon verfügbar. 
-- Fehler weitergabe etwas erschwerlich
-- Aktuell: Instanz starten mit fixem Namen. Die ist auch so genannet in Client/Abstract_benchmark. \
---> Console: \
-```singularity instance start /home/philipp/Dokumenete/images/xgboost/ Test``` 
-- Dann server aufruf.
-(```singularity run instance://Test XGBoostOnMnist Test``` <-- startet Server)
-- Dann xgb_example: Das ruft aufch client/abstract_benchmark auf.  
-- CLient/abstract_bench ruft momentan noch nicht server/abstract_benchmark auf. 
-- nächster Versuch: alles wieder auf normal + funktion schöner machen für einstellungen! (Verbesserung)
+
+Erstellen von Container + Hochladen
+-----------------------------------
+### Before Starting
+- Go to : https://cloud.sylabs.io/
+- Click “Sign in to Sylabs” and follow the sign in steps.
+- Click on your login id (same and updated button as the Sign in one).
+- Select “Access Tokens” from the drop down menu.
+- Click the “Manage my API tokens” button from the “Account Management” page.
+- Click “Create”.
+- Click “Copy token to Clipboard” from the “New API Token” page.
+Paste the token string into your ~/.singularity/sylabs-token file.
+
+
+###  1) Using the Remote Building Tool:
+- Go to: https://cloud.sylabs.io/builder . In field 'Build recipe file is', change 'default' to 'automl'. 
+  Append name of the benchmark. \
+  Example: phmueller/automl/xgboost_benchmark.
+- Paste Recipe in the form above
+- Click on Build
+- Verify Container
+    - https://sylabs.io/guides/3.0/user-guide/signNverify.html#signing-your-own-containers \
+    ``` singularity keys newpair ```
+    (email is email from login to singularity)
+- ```singularity pull --name <name after downloading> library://<username>/automl/<benchmark_name>``` \
+  Example: \
+  ```singularity pull --name xgboost_benchmark library://phmueller/automl/xgboost_benchmark ```
+- ```singularity sign <name after download>``` \
+  Example: \
+  ```singularity sign xgboost_benchmark```
+- ```singularity push <name after download> library://<username>/automl/xgboost_benchmark``` \
+  Example: \
+  ```singularity push xgboost_benchmark library://phmueller/automl/xgboost_benchmark```
+  
+###  1) Using the Command Line Building Tool:
+- Create Image: ```sudo singularity build <container_name> <Pfad zu Image-Rezept>```
+  Example:\
+  ```sudo singularity build xgboost_benchmark hpolib/container/recipes/ml/Singularity.XGBoostOnMnist```
+- Verify Container
+    - https://sylabs.io/guides/3.0/user-guide/signNverify.html#signing-your-own-containers \
+    ``` singularity keys newpair ```
+    (email is email from login to singularity)
+- ```singularity sign <container_name>```
+- ```singularity push <container_name> library://<username>/automl/<container_name>```
