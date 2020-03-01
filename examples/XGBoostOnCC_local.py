@@ -6,6 +6,12 @@ from hpolib.util.openml_data_manager import get_openmlcc18_taskids
 
 logger = logging.getLogger('XGBoostBenchmark')
 logger.setLevel(level=logging.DEBUG)
+import numpy as np
+my_rng = np.random.RandomState(0)
+
+b = Benchmark(task_id=167199)
+config = b.get_configuration_space(seed=0).get_default_configuration()
+rval = b.objective_function(config, n_estimators=5, subsample=0.1)
 
 task_ids = get_openmlcc18_taskids()
 
@@ -13,6 +19,7 @@ start = time()
 
 for task_no, task_id in enumerate(task_ids):
     logger.info(f'###################### TASK {task_no + 1} of {len(task_ids)} ######################')
+
     b = Benchmark(task_id=task_id)
     cs = b.get_configuration_space()
     for i in range(3):

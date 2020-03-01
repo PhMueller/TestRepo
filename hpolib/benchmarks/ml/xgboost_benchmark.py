@@ -40,6 +40,14 @@ class XGBoostBenchmark(AbstractBenchmark):
 
         self.categorical_data = np.array([var_type == 'categorical' for var_type in variable_types])
 
+        # XGB needs sorted data. Data should be (Categorical + numerical) not mixed.
+        categorical_idx = np.argwhere(self.categorical_data)
+        continuous_idx = np.argwhere(~self.categorical_data)
+        sorting = np.concatenate([categorical_idx, continuous_idx]).squeeze()
+        self.X_train = self.X_train[:, sorting]
+        self.X_valid = self.X_valid[:, sorting]
+        self.X_test = self.X_test[:, sorting]
+
         # Determine all possible values per categorical feature
         complete_data = np.concatenate([self.X_train, self.X_valid, self.X_test], axis=0)
         self.categories = [np.unique(complete_data[:, i])
