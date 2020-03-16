@@ -31,7 +31,7 @@ before_script:
   - chmod +x ci_scripts/codestyle.sh && source ./ci_scripts/codestyle.sh $RUN_CODESTYLE
 
 script:
-  - python ./examples/examples/white_box_test.py --array_id 1
+  - python ./examples/white_box_test.py --array_id 1
 
 # after_success:
 #   - codecov
