@@ -11,9 +11,6 @@ jobs:
   - python: "3.7"
     env:
     - USE_SINGULARITY="true"
-    #- GOROOT=/usr/local/go/bin
-    #- GOPATH=~/.go/bin
-    #- PATH=$PATH:$GOROOT:$GOPATH
   - python: "3.8"
     env: RUN_CODESTYLE="true"
 
