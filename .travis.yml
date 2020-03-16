@@ -24,7 +24,7 @@ install:
   - pip install .[xgb,codestyle]
 
 # command to run tests, e.g. python setup.py test
-script:
+before_script:
   - pycodestyle --max-line-length=120 ./hpolib
   - flake8 --max-line-length=120 ./hpolib
 
