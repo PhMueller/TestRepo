@@ -25,7 +25,7 @@ install:
 
 # command to run tests, e.g. python setup.py test
 before_script:
-  - chmod + x codestyle.sh && ./codesytle.sh
+  - ./codesytle.sh
 
 # after_success:
 #   - codecov
