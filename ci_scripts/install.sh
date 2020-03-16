@@ -3,6 +3,7 @@
 if [[ "$USE_SINGULARITY" == "true" ]]; then
     echo "USE SINGULARTIY "
     echo $PATH
+    echo "usr/local $(ls -l /usr/local/)"
 
     sudo apt-get update && sudo apt-get install -y \
       build-essential \
@@ -32,6 +33,8 @@ if [[ "$USE_SINGULARITY" == "true" ]]; then
     echo "NOW IN $(pwd)"
     echo "$(ls -l)"
     echo "$PATH"
+    echo "$(go --version)"
+    echo "usr/local $(ls -l /usr/local/go/bin)"
 
     ./mconfig && \
       make -C builddir && \
