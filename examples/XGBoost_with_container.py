@@ -1,11 +1,26 @@
+"""
+In this example, we show how to use a benchmark with a container. We provide container for some benchmarks.
+They are hosted on https://cloud.sylabs.io/library/keggensperger/automl.
+
+Furthermore, we use different fidelities to train the xgboost model - the number of estimators as well as the fraction
+of training data points.
+"""
+
+
 import logging
 import time
 import numpy as np
-import json_tricks
+
+try:
+    import json_tricks
+except ImportError:
+    raise ImportError('Please install the json-tricks package via ``pip3 install json-tricks``')
+
 import argparse
 
 from pathlib import Path
 
+logging.basicConfig(level=logging.DEBUG)
 
 from hpolib.util.openml_data_manager import get_openmlcc18_taskids
 from hpolib.container.benchmarks.ml.xgboost_benchmark import XGBoostBenchmark as Benchmark
@@ -20,21 +35,28 @@ def run_benchmark(task_id):
 
     my_rng = np.random.RandomState(0)
 
-    b = Benchmark(rng=my_rng, container_name='XGBoostBenchmark', task_id=task_id)
+    # It is possible to link to a custom container directory, by providing either a local path or link to another
+    # hosting platform. Also, the name of the container can be specified.
+    # The default value for  ``container source``  is defined in config.py and the ``container_name`` is defined in the
+    # corresponding benchmark definition. Here, we use the default values to show how customize them.
+    b = Benchmark(rng=my_rng,
+                  container_source='library://keggensperger/automl/',
+                  container_name='xgboost_benchmark',
+                  task_id=task_id)
 
     start = time.time()
     cs = b.get_configuration_space()
+    configuration = cs.get_default_configuration()
 
     n_estimators = [2, 4, 8, 16, 32, 64]
-    subsamples = [0.1, 0.2, 0.4, 0.8, 1]
+    subsample_ratios = [0.1, 0.2, 0.4, 0.8, 1]
 
     result_per_data_set = []
     num_configs = 10
     for i in range(num_configs):
-        configuration = cs.get_default_configuration()
-        data_per_config = {estimator: {subsample: {} for subsample in subsamples} for estimator in n_estimators}
+        data_per_config = {estimator: {subsample: {} for subsample in subsample_ratios} for estimator in n_estimators}
         for estimator in n_estimators:
-            for subsample in subsamples:
+            for subsample in subsample_ratios:
                 try:
                     result_dict = b.objective_function(configuration, n_estimators=estimator, subsample=subsample)
                     valid_loss = result_dict['function_value']
@@ -60,11 +82,8 @@ def run_benchmark(task_id):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog='HPOlib CC Datasets',
-                                     description='HPOlib3',
-                                     usage='%(prog)s <task_id>')
-    parser.add_argument('array_id', type=int,
-                        help='values from 0 to 71')
+    parser = argparse.ArgumentParser(prog='HPOlib CC Datasets', description='HPOlib3', usage='%(prog)s <task_id>')
+    parser.add_argument('--array_id', type=int, help='Defines which data set to use. Values from 0 to 71')
 
     args = parser.parse_args()
     task_ids = get_openmlcc18_taskids()

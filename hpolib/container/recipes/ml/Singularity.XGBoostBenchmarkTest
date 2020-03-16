@@ -6,7 +6,7 @@ MAINTAINER muelleph@informatik.uni-freiburg.de
 VERSION v0.0.1
 
 %files
-    /home/philipp/Dokumente/Code/HPOlib3 /home/philipp/HPOlib3
+    /home/philipp/Dokumente/Code/HPOlib3 /home/HPOlib3
 
 %post
     apt update -y
@@ -14,7 +14,7 @@ VERSION v0.0.1
     pip install numpy==1.18.1 cython==0.29.14
 
     cd /home \
-        && cd $SINGULARITY_ROOTFS/home/philipp/HPOlib3 \
+        && cd $SINGULARITY_ROOTFS/home/HPOlib3 \
         && pip install .[singularity,xgboost] \
         && cd /
 

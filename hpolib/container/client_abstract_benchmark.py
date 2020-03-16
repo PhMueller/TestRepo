@@ -11,9 +11,8 @@ To reduce download traffic, firstly, it checks if the container is already
 downloaded. The container source as well as the path, where it should be stored,
 are defined in the ~/.hpolibrc - file.
 
-The name of the container (``benchmark_name``) is defined either in its belonging
-container-benchmark definition. (hpolib/container/<type>/<name> or via
-``container_name``.
+The name of the container (``container_name``) is defined either in its belonging
+container-benchmark definition. (hpolib/container/<type>/<name> or via ``container_name``.
 """
 
 import abc
@@ -51,25 +50,26 @@ class AbstractBenchmarkClient(metaclass=abc.ABCMeta):
                gpu: bool = False, **kwargs):
         """ Initialization of the benchmark using container.
 
-        This setup function downloads the container from a defined source.
-        The source is defined either in the .hpolibrc or in the its benchmark
-        definition (hpolib/container/benchmarks/<type>/<name>).
-        If an container is already locally available, the local container is
-        used. Then, the container is started and a connection between the
-        container and the client is established.
+        This setup function downloads the container from a defined source. The source is defined either in the
+        .hpolibrc or in the its benchmark definition (hpolib/container/benchmarks/<type>/<name>). If an container
+        is already locally available, the local container is used. Then, the container is started and a connection
+        between the container and the client is established.
 
         Parameters
         ----------
-        gpu : bool
-            If True, the container has access to the local cuda-drivers.
-            (Not tested)
-        container_name : Optional[str]
-            name of the container. E.g. XGBoostBenchmark. The local container has to have the same name. It could be
-            useful to have multiple container for the same benchmark, if a tool like auto-sklearn is updated to a newer
-            version, and you want to compare its performance across its versions.
+        benchmark_name: str
+            Class name of the benchmark to use. For example XGBoostBenchmark. This value is defined in the benchmark
+            definition (hpolib/container/benchmarks/<type>/<name>
         container_source : Optional[str]
             Path to the container. Either local path or url to a hosting
             platform, e.g. singularity hub.
+        container_name : Optional[str]
+            name of the container. E.g. xgboost_benchmark. Specifying different container could be
+            useful to have multiple container for the same benchmark, if a tool like auto-sklearn is updated to a newer
+            version, and you want to compare its performance across its versions.
+        gpu : bool
+            If True, the container has access to the local cuda-drivers.
+            (Not tested)
         """
         # Create unique ID
         self.config = hpolib.config.config_file
