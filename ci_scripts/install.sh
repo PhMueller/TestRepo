@@ -3,7 +3,8 @@
 if [[ "$USE_SINGULARITY" == "true" ]]; then
     echo "USE SINGULARTIY "
     echo "$(go version) before gimme stable"
-    gimme stable
+    gimme force 1.14
+    eval "$(gimme 1.14)"
     echo "$(go version) after gimme stable"
 
     sudo apt-get update && sudo apt-get install -y \
