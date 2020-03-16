@@ -21,12 +21,11 @@ git:
   depth: 5
 
 install:
-  - pip install .[xgb,codestyle]
+  - pip install .[xgb]
 
 # command to run tests, e.g. python setup.py test
 before_script:
-  - pycodestyle --max-line-length=120 ./hpolib
-  - flake8 --max-line-length=120 ./hpolib
+  - ./codesytle.sh
 
 # after_success:
 #   - codecov
