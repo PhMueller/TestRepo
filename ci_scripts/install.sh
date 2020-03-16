@@ -2,13 +2,11 @@
 
 if [[ "$USE_SINGULARITY" == "true" ]]; then
     echo "USE SINGULARTIY "
-    echo $PATH
-    echo "usr/local $(ls -l /usr/local/)"
     echo "$(go version)"
-
     sudo apt-get purge golang*
     echo "$(go version)"
-
+    gimme stable
+    echo "$(go version)"
 
     sudo apt-get update && sudo apt-get install -y \
       build-essential \
