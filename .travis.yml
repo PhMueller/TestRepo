@@ -22,11 +22,11 @@ git:
   depth: 5
 
 install:
-  - chmod +x install.sh && source ./install.sh $USE_SINGULARITY
+  - chmod +x ci_scripts/install.sh && source ./ci_scripts/install.sh $USE_SINGULARITY
 
 # command to run tests, e.g. python setup.py test
 before_script:
-  - chmod +x codestyle.sh && source ./codestyle.sh $RUN_CODESTYLE
+  - chmod +x ci_scripts/codestyle.sh && source ./ci_scripts/codestyle.sh $RUN_CODESTYLE
 
 # after_success:
 #   - codecov
