@@ -1,0 +1,4 @@
+{
+  "codestyle": ["pycodestyle", "flake8"],
+  "unittests": ["pytest"]
+}
