@@ -11,8 +11,9 @@ jobs:
   - python: "3.7"
     env:
     - USE_SINGULARITY="true"
-  # - python: "3.8"
-  #   env: RUN_CODESTYLE="true"
+  - python: "3.8"
+    env:
+    - RUN_CODESTYLE="true"
 
 before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
@@ -32,7 +33,7 @@ before_script:
   - chmod +x ci_scripts/codestyle.sh && source ./ci_scripts/codestyle.sh
 
 script:
-  - python ./examples/white_box_test.py --array_id 1
+  - python ./tests/white_box_test.py --array_id 1
 
 # after_success:
 #   - codecov

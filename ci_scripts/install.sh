@@ -1,11 +1,14 @@
 #!/usr/bin/env sh
 
 if [[ "$RUN_CODESTYLE" == "true" ]]; then
-  pip install pycodestyle flake8 pytest pytest-cov
+    echo "Install tools for codestyle checking"
+    pip install pycodestyle flake8 pytest pytest-cov
+else
+    echo "Skip installing tools for codestyle checking"
 fi
 
 if [[ "$USE_SINGULARITY" == "true" ]]; then
-    echo "USE SINGULARTIY "
+    echo "Install Singularity"
     gimme force 1.14
     eval "$(gimme 1.14)"
 
@@ -34,7 +37,7 @@ if [[ "$USE_SINGULARITY" == "true" ]]; then
     pip install .[xgboost,singularity]
 
 else
-    echo "DONT USE SINGULARTIY "
+    echo "Skip installing Singularity"
     pip install .[xgboost]
 fi
 
