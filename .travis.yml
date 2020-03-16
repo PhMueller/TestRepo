@@ -1,0 +1,32 @@
+language: python
+
+sudo: false
+
+jobs:
+  include:
+  - python: "3.6"
+  - python: "3.7"
+  - python: "3.8"
+    env: RUN_CODESTYLE="true"
+
+before_cache:
+  - rm -f $HOME/.cache/pip/log/debug.log
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+  pip: true
+
+git:
+  depth: 5
+
+install:
+  - pip install .[xgb,codestyle]
+
+# command to run tests, e.g. python setup.py test
+script:
+  - pycodestyle --max-line-length=120 ./hpolib
+  - flake8 --max-line-length=120 ./hpolib
+
+# after_success:
+#   - codecov
