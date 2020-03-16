@@ -1,19 +1,14 @@
 language: python
-
 dist: xenial
-
 os: linux
-
 
 jobs:
   include:
-  # - python: "3.6"
+  - python: "3.6"
   - python: "3.7"
-    env:
-    - USE_SINGULARITY="true"
+    env: USE_SINGULARITY="true"
   - python: "3.8"
-    env:
-    - RUN_CODESTYLE="true"
+    env: RUN_CODESTYLE="true"
 
 before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
