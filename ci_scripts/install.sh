@@ -1,8 +1,10 @@
 #!/usr/bin/env sh
 
+pip install pytest pytest-cov
+
 if [[ "$RUN_CODESTYLE" == "true" ]]; then
     echo "Install tools for codestyle checking"
-    pip install pycodestyle flake8 pytest pytest-cov
+    pip install pycodestyle flake8
 else
     echo "Skip installing tools for codestyle checking"
 fi
@@ -40,4 +42,3 @@ else
     echo "Skip installing Singularity"
     pip install .[xgboost]
 fi
-
