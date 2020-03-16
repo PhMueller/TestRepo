@@ -4,11 +4,14 @@ dist: xenial
 
 os: linux
 
+
 jobs:
   include:
   - python: "3.6"
   - python: "3.7"
-    env: USE_SINGULARITY="true"
+    env:
+    - USE_SINGULARITY="true"
+    - PATH=/usr/local/go/bin:$PATH
   - python: "3.8"
     env: RUN_CODESTYLE="true"
 

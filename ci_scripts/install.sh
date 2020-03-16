@@ -2,6 +2,7 @@
 
 if [[ "$USE_SINGULARITY" == "true" ]]; then
     echo "USE SINGULARTIY "
+    echo "$(PATH)"
 
     sudo apt-get update && sudo apt-get install -y \
       build-essential \
@@ -27,6 +28,8 @@ if [[ "$USE_SINGULARITY" == "true" ]]; then
       wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-${VERSION}.tar.gz && \
       tar -xzf singularity-${VERSION}.tar.gz && \
       cd singularity
+
+    echo "NOW IN $(pwd)"
 
     ./mconfig && \
       make -C builddir && \
