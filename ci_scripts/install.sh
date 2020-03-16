@@ -2,7 +2,7 @@
 
 if [[ "$USE_SINGULARITY" == "true" ]]; then
     echo "USE SINGULARTIY "
-    echo "$(PATH)"
+    echo $PATH
 
     sudo apt-get update && sudo apt-get install -y \
       build-essential \
@@ -30,6 +30,8 @@ if [[ "$USE_SINGULARITY" == "true" ]]; then
       cd singularity
 
     echo "NOW IN $(pwd)"
+    echo "$(ls -l)"
+    echo "$PATH"
 
     ./mconfig && \
       make -C builddir && \
@@ -37,7 +39,9 @@ if [[ "$USE_SINGULARITY" == "true" ]]; then
 
     singularity help
 
+    cd ..
     pip install .[xgboost,singularity]
+
 else
     echo "DONT USE SINGULARTIY "
     pip install .[xgboost]
