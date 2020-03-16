@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+if [[ "$RUN_CODESTYLE" == "true" ]]; then
+  pip install pycodestyle flake8 pytest pytest-cov
+fi
+
 if [[ "$USE_SINGULARITY" == "true" ]]; then
     echo "USE SINGULARTIY "
     gimme force 1.14
