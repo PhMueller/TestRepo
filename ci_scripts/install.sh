@@ -50,4 +50,4 @@ fi
 
 install_packages="${install_packages}xgboost"
 echo "${install_packages}"
-pip install .["${install_packages}"]
+eval pip install .["${install_packages}"]
