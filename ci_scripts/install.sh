@@ -49,5 +49,5 @@ else
 fi
 
 install_packages="${install_packages}xgboost"
-echo "${install_packages}"
-eval pip install .["${install_packages}"]
+echo "Install Hpolib with options: ${install_packages}"
+pip install .["${install_packages}"]
