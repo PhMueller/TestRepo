@@ -1,14 +1,14 @@
 #!/usr/bin/env sh
 
 if [[ "$RUN_TESTS" == "true" ]]; then
-    if [[ "$USE_SINGULARTIY" == "true" ]]; then
+    if [[ "$USE_SINGULARITY" == "true" ]]; then
         echo "Run tests with singularity support"
         # Create the coverage report for the singularity example, since it covers more tests.
         pytest -sv --cov=hpolib tests/
         codecov --token=$CODECOV_TOKEN
     else
         echo "Run tests without singularity support"
-        pytest -sv /tests
+        pytest -sv tests/
     fi
 fi
 
