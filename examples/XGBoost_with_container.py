@@ -10,12 +10,7 @@ of training data points.
 import logging
 import time
 import numpy as np
-
-try:
-    import json_tricks
-except ImportError:
-    raise ImportError('Please install the json-tricks package via ``pip3 install json-tricks``')
-
+import json_tricks
 import argparse
 
 from pathlib import Path

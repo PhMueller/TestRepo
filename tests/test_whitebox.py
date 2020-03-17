@@ -42,7 +42,7 @@ def test_whitebox_with_container():
                   task_id=167199,
                   rng=0)
 
-    cs = b.get_configuration_space(seed=0)
+    cs = b.get_configuration_space()
     configuration = cs.get_default_configuration()
     assert configuration['colsample_bylevel'] == 1.0
     assert len(configuration.keys()) == 6
