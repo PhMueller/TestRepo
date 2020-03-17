@@ -1,4 +1,4 @@
 {
   "codestyle": ["pycodestyle", "flake8"],
-  "unittests": ["pytest"]
+  "pytest": ["pytest","pytest-cov"]
 }

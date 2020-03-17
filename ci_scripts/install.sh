@@ -1,10 +1,17 @@
 #!/usr/bin/env sh
 
-pip install pytest pytest-cov
+install_packages=""
+
+if [[ "$RUN_TESTS" == "true" ]]; then
+    echo "Install tools for testing"
+    install_packages="${install_packages}pytest,"
+else
+    echo "Skip installing tools for testing"
+fi
 
 if [[ "$RUN_CODESTYLE" == "true" ]]; then
     echo "Install tools for codestyle checking"
-    pip install pycodestyle flake8
+    install_packages="${install_packages}codestyle,"
 else
     echo "Skip installing tools for codestyle checking"
 fi
@@ -36,9 +43,11 @@ if [[ "$USE_SINGULARITY" == "true" ]]; then
       sudo make -C builddir install
 
     cd ..
-    pip install .[xgboost,singularity]
-
+    install_packages="${install_packages}singularity,"
 else
     echo "Skip installing Singularity"
-    pip install .[xgboost]
 fi
+
+install_packages="${install_packages}xgboost"
+echo "${install_packages}"
+pip install .["${install_packages}"]

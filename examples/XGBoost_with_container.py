@@ -4,6 +4,12 @@ They are hosted on https://cloud.sylabs.io/library/keggensperger/automl.
 
 Furthermore, we use different fidelities to train the xgboost model - the number of estimators as well as the fraction
 of training data points.
+
+To use the container-example, you have to have singulartiy (>3.5) installed. Follow the official installation guide on
+https://sylabs.io/guides/3.1/user-guide/quick_start.html#quick-installation-steps
+
+Furthermore, make sure to install the right dependencies for the hpolib via:
+``pip3 install .[xgboost,singularity]``.
 """
 
 
@@ -12,7 +18,6 @@ import time
 import numpy as np
 import json_tricks
 import argparse
-
 from pathlib import Path
 
 logging.basicConfig(level=logging.DEBUG)
