@@ -4,10 +4,10 @@ os: linux
 
 jobs:
   include:
-  - python: "3.6"
-    env: RUN_TESTS="true"
-  - python: "3.7"
-    env: RUN_TESTS="true"
+  #- python: "3.6"
+  #  env: RUN_TESTS="true"
+  #- python: "3.7"
+  #  env: RUN_TESTS="true"
   - python: "3.8"
     env:
       - RUN_TESTS="true"
@@ -19,11 +19,11 @@ jobs:
     env:
       - RUN_EXAMPLES="true"
       - USE_SINGULARITY="true"
-  - python: "3.8"
-    dist: xenial
-    env:
-      - RUN_EXAMPLES="true"
-      - USE_SINGULARITY="true"
+  # - python: "3.8"
+  #   dist: xenial
+  #   env:
+  #     - RUN_EXAMPLES="true"
+  #     - USE_SINGULARITY="true"
 
 before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log

@@ -2,6 +2,8 @@ import numpy as np
 import pytest
 from time import time
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 try:
     import Pyro4
