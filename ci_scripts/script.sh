@@ -19,5 +19,5 @@ fi
 
 if [[ "$RUN_EXAMPLES" == "true" ]]; then
     echo "Run all examples"
-    chmod +x ci_scripts/examples.sh.sh && source ./ci_scripts/examples.sh
+    chmod +x ci_scripts/examples.sh && source ./ci_scripts/examples.sh
 fi
