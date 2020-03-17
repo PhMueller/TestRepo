@@ -126,7 +126,6 @@ class AbstractBenchmarkClient(metaclass=abc.ABCMeta):
         self.uri = f'PYRO:{self.socket_id}.unixsock@./u:' \
                    f'{self.config.socket_dir}/{self.socket_id}_unix.sock'
         self.benchmark = Pyro4.Proxy(self.uri)
-        print(os.listdir(self.config.socket_dir))
 
         # Handle rng and other optional benchmark arguments
         if 'rng' in kwargs and isinstance(kwargs['rng'], numpy.random.RandomState):

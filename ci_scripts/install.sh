@@ -5,6 +5,7 @@ install_packages=""
 if [[ "$RUN_TESTS" == "true" ]]; then
     echo "Install tools for testing"
     install_packages="${install_packages}pytest,"
+    pip install codecov
 else
     echo "Skip installing tools for testing"
 fi
