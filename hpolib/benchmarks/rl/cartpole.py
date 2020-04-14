@@ -62,7 +62,7 @@ class CartpoleBase(AbstractBenchmark):
         raise NotImplementedError()
 
     @AbstractBenchmark._check_configuration
-    def objective_function(self, config: Dict, budget: int = None, max_episodes: int = None, **kwargs) -> Dict:
+    def objective_function(self, config: Dict, budget: int = None, **kwargs) -> Dict:
         # fill in missing entries with default values for 'incomplete/reduced' configspaces
         c = self.defaults
         c.update(config)
@@ -71,7 +71,6 @@ class CartpoleBase(AbstractBenchmark):
         start_time = time.time()
 
         budget = budget or self.max_budget
-        max_episodes = max_episodes or self.max_episodes
 
         network_spec = [{'type': 'dense', 'size': config["n_units_1"], 'activation': config['activation_1']},
                         {'type': 'dense', 'size': config["n_units_2"], 'activation': config['activation_2']}]
@@ -104,14 +103,14 @@ class CartpoleBase(AbstractBenchmark):
                 return np.mean(r.episode_rewards[-self.avg_n_episodes:]) != 200
 
             runner = Runner(agent=agent, environment=self.env)
-            runner.run(episodes=max_episodes, max_episode_timesteps=200, episode_finished=episode_finished)
+            runner.run(episodes=self.max_episodes, max_episode_timesteps=200, episode_finished=episode_finished)
             converged_episodes.append(len(runner.episode_rewards))
 
         cost = time.time() - start_time
 
         return {'function_value': np.mean(converged_episodes),
                 'cost': cost,
-                'max_episodes': max_episodes,
+                'max_episodes': self.max_episodes,
                 'budget': budget,
                 'all_runs': converged_episodes}
 
