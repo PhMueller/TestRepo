@@ -19,6 +19,7 @@ fi
 
 if [[ "$RUN_EXAMPLES" == "true" ]]; then
     echo "Install packages for examples"
+    apt install swig
     install_packages="${install_packages}xgboost_example,cartpole_example,"
 else
     echo "Skip installing packages for examples"
