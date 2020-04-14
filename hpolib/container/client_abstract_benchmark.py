@@ -139,7 +139,6 @@ class AbstractBenchmarkClient(metaclass=abc.ABCMeta):
         wait = 0
         while True:
             try:
-                print(os.listdir(self.config.socket_dir))
                 self.benchmark.init_benchmark(kwargs_str)
             except Pyro4.core.errors.CommunicationError:
                 logger.debug('Still waiting')

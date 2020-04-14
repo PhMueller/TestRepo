@@ -4,7 +4,7 @@ install_packages=""
 
 if [[ "$RUN_TESTS" == "true" ]]; then
     echo "Install tools for testing"
-    install_packages="${install_packages}pytest,"
+    install_packages="${install_packages}xgboost,cartpole,pytest,"
     pip install codecov
 else
     echo "Skip installing tools for testing"
@@ -15,6 +15,13 @@ if [[ "$RUN_CODESTYLE" == "true" ]]; then
     install_packages="${install_packages}codestyle,"
 else
     echo "Skip installing tools for codestyle checking"
+fi
+
+if [[ "$RUN_EXAMPLES" == "true" ]]; then
+    echo "Install packages for examples"
+    install_packages="${install_packages}xgboost_example,cartpole_example,"
+else
+    echo "Skip installing packages for examples"
 fi
 
 if [[ "$USE_SINGULARITY" == "true" ]]; then
@@ -49,6 +56,8 @@ else
     echo "Skip installing Singularity"
 fi
 
-install_packages="${install_packages}xgboost"
-echo "Install Hpolib with options: ${install_packages}"
+# TODO: (pm, 30.3): Think about the topology of install-packages. Which packages is necessary for what step.
+# remove the trailing comma
+install_packages="$(echo ${install_packages} | sed 's/,*\r*$//')"
+echo "Install HPOlib3 with options: ${install_packages}"
 pip install .["${install_packages}"]
