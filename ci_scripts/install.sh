@@ -56,7 +56,6 @@ else
     echo "Skip installing Singularity"
 fi
 
-# TODO: (pm, 30.3): Think about the topology of install-packages. Which packages is necessary for what step.
 # remove the trailing comma
 install_packages="$(echo ${install_packages} | sed 's/,*\r*$//')"
 echo "Install HPOlib3 with options: ${install_packages}"
