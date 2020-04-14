@@ -19,7 +19,7 @@ fi
 
 if [[ "$RUN_EXAMPLES" == "true" ]]; then
     echo "Install packages for examples"
-    sudo apt-get install swig
+    sudo apt-get update && sudo apt-get install -y build-essential swig
     install_packages="${install_packages}xgboost_example,cartpole_example,"
 else
     echo "Skip installing packages for examples"
